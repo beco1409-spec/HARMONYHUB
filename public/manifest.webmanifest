@@ -1,0 +1,12 @@
+{
+  "name": "Portal Adoração",
+  "short_name": "Adoração",
+  "description": "App para ministério de louvor: escalas, repertório e Modo Culto ao vivo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
+  ]
+}

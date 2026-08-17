@@ -1,0 +1,6 @@
+# Copie para ".dev.vars" para usar estas variáveis com `wrangler dev` / `vite dev`
+# (o Cloudflare Worker as lê no lugar do process.env em produção).
+SUPABASE_PROJECT_ID="seu-project-id"
+SUPABASE_PUBLISHABLE_KEY="sb_publishable_xxxxxxxxxxxxxxxxxxxx"
+SUPABASE_URL="https://seu-project-id.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="sb_secret_xxxxxxxxxxxxxxxxxxxx"

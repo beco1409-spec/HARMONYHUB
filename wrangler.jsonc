@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "harmony-hub",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+
+  // Vars visíveis no build/preview local (wrangler dev). Em produção, defina os
+  // valores reais como Secrets (veja o passo a passo de deploy) — não coloque
+  // segredos aqui, este arquivo normalmente vai para o Git.
+  "vars": {
+    "SUPABASE_URL": "",
+    "SUPABASE_PROJECT_ID": "",
+    "SUPABASE_PUBLISHABLE_KEY": ""
+  }
+
+  // "SUPABASE_SERVICE_ROLE_KEY" é secreta e NUNCA deve entrar aqui.
+  // Configure-a com: wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+}

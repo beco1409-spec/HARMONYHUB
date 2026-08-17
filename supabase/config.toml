@@ -1,0 +1,5 @@
+# project_id é preenchido automaticamente ao rodar:
+#   supabase link --project-ref <ref-do-seu-novo-projeto>
+# Troque o valor abaixo pelo Project Ref do SEU projeto Supabase
+# (Project Settings > General > Reference ID).
+project_id = "SEU_PROJECT_REF_AQUI"
