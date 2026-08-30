@@ -230,3 +230,74 @@ Se quiser deploy automático a cada push, conecte o repositório GitHub em
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` registrada com `wrangler secret put`
 - [ ] `npm run build` sem erros
 - [ ] `npm run deploy` publicado e testado na URL `*.workers.dev`
+
+---
+
+## Atualização: Sistema de Perfis, Cadastro e Permissões (Master/Padrão)
+
+Esta seção documenta a nova camada de perfil obrigatório, funções musicais e
+permissões (Master/Padrão) adicionada por cima do sistema já existente — nada
+do que já funcionava foi removido.
+
+### O que foi adicionado
+
+- **Migração** `supabase/migrations/20260819120000_perfil_funcoes_permissoes.sql`:
+  - Colunas novas em `profiles`: `funcoes` (lista de funções musicais),
+    `role` (`master` ou `padrao`), `perfil_configurado` (bool) e `email`.
+  - Reaproveita a coluna `funcao_vocal` já existente como "classificação de
+    timbre de voz" — não duplica campo.
+  - Função `is_master()` e um trigger que impede um usuário Padrão de alterar
+    sua própria permissão (ou a de outros) e impede remover o último Master
+    do sistema — a proteção fica no banco, não só na tela.
+- **Popup obrigatório** no primeiro acesso (`ProfileSetupModal`), disparado em
+  `src/routes/_authenticated/route.tsx`: o app só libera o conteúdo depois
+  que a pessoa preenche nome, função(ões) musical(is) e timbre (quando
+  aplicável).
+- **`/configuracao`** e **`/configuracao/usuarios`**: área administrativa,
+  visível apenas para quem tem `role = master` — tanto escondida do menu
+  quanto bloqueada por rota (`beforeLoad`) se alguém tentar acessar a URL
+  diretamente.
+- Perfis já existentes (de antes desta migração) são marcados como
+  "configurados" automaticamente, para não travar quem já usa o app.
+
+### Passo a passo para aplicar
+
+1. **Substitua os arquivos no seu repositório** pelos deste pacote (ou faça o
+   merge manual, se você já alterou algo local).
+
+2. **Aplique a nova migração no Supabase**:
+   ```powershell
+   cd C:\HARMONYHUB
+   npx supabase link --project-ref <SEU_PROJECT_REF>
+   npx supabase db push
+   ```
+   Isso roda só a migração nova (`20260819120000_...sql`); as anteriores já
+   aplicadas são puladas automaticamente.
+
+   **Alternativa sem CLI:** cole o conteúdo do arquivo
+   `supabase/migrations/20260819120000_perfil_funcoes_permissoes.sql` no
+   **SQL Editor** do Supabase e execute.
+
+3. **Defina o primeiro Master.** Ninguém consegue virar Master pela
+   interface (é proposital — só um Master promove outro usuário). No
+   **SQL Editor** do Supabase, rode uma vez, trocando pelo e-mail da pessoa
+   responsável:
+   ```sql
+   UPDATE public.profiles
+   SET role = 'master'
+   WHERE id = (SELECT id FROM auth.users WHERE email = 'seu-email@exemplo.com');
+   ```
+   Depois disso, essa pessoa já consegue promover/rebaixar os demais pela
+   tela **Perfil → Configuração → Usuários**.
+
+4. **Build e deploy** (igual ao processo já usado):
+   ```powershell
+   npm install
+   npm run build
+   npm run deploy
+   ```
+
+5. **Teste**: faça login com uma conta nova — o popup de configuração de
+   perfil deve aparecer antes de liberar o app. Faça login com a conta que
+   você promoveu a Master — o item **Configuração** deve aparecer no menu do
+   Perfil.

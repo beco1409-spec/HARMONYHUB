@@ -1,19 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "harmony-hub",
-  "compatibility_date": "2026-08-01",
+  "name": "harmonyhub",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2024-09-23",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
-
-  // Vars visíveis no build/preview local (wrangler dev). Em produção, defina os
-  // valores reais como Secrets (veja o passo a passo de deploy) — não coloque
-  // segredos aqui, este arquivo normalmente vai para o Git.
+  "assets": {
+    "directory": "dist/client"
+  },
   "vars": {
-    "SUPABASE_URL": "",
-    "SUPABASE_PROJECT_ID": "",
-    "SUPABASE_PUBLISHABLE_KEY": ""
+    "SUPABASE_URL": "https://tpqdutbhkwiqafsywckt.supabase.co",
+    "SUPABASE_PROJECT_ID": "tpqdutbhkwiqafsywckt",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_SEucDMfEIy1j1CwpNmIElw_vFsefXHF",
+    "VITE_SUPABASE_URL": "https://tpqdutbhkwiqafsywckt.supabase.co",
+    "VITE_SUPABASE_PROJECT_ID": "tpqdutbhkwiqafsywckt",
+    "VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_SEucDMfEIy1j1CwpNmIElw_vFsefXHF"
   }
-
-  // "SUPABASE_SERVICE_ROLE_KEY" é secreta e NUNCA deve entrar aqui.
-  // Configure-a com: wrangler secret put SUPABASE_SERVICE_ROLE_KEY
 }

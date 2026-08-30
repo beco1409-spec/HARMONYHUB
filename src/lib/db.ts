@@ -414,7 +414,38 @@ export async function removeFavorito(userId: string, musicaId: string) {
 }
 
 // ----- Perfil, cantor vinculado e tons
-export async function getProfile(userId: string) {
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type PermissionRole = "master" | "padrao";
+
+/** Funções musicais que um integrante pode acumular (seleção múltipla). */
+export const FUNCOES_MUSICAIS = [
+  "Vocalista",
+  "Baixista",
+  "Guitarrista",
+  "Tecladista",
+  "Baterista",
+  "Violinista",
+  "Backing Vocal",
+] as const;
+
+/** Classificação de timbre de voz (seleção única, obrigatória só para quem canta). */
+export const TIMBRES_VOCAIS = [
+  "Soprano",
+  "Mezzo-soprano",
+  "Contralto",
+  "Tenor",
+  "Barítono",
+  "Baixo",
+] as const;
+
+export const TIMBRE_NAO_SE_APLICA = "Não se aplica";
+
+/** Funções que exigem classificação de timbre vocal. */
+export function exigeTimbreVocal(funcoes: string[]) {
+  return funcoes.includes("Vocalista") || funcoes.includes("Backing Vocal");
+}
+
+export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
@@ -429,6 +460,26 @@ export async function updateProfile(
   patch: Database["public"]["Tables"]["profiles"]["Update"],
 ) {
   const { error } = await supabase.from("profiles").update(patch).eq("id", userId);
+  if (error) throw error;
+}
+
+/** Lista todos os perfis do ministério — usado na tela de administração (Master). */
+export async function listProfiles(): Promise<Profile[]> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .order("nome_completo", { ascending: true });
+  if (error) throw error;
+  return data ?? [];
+}
+
+/**
+ * Altera a permissão (role) de um usuário. A checagem de "quem pode fazer
+ * isso" e a proteção do último Master ficam no banco (RLS + trigger), então
+ * esta função só propaga o erro do Postgres quando a operação é negada.
+ */
+export async function setProfileRole(userId: string, role: PermissionRole) {
+  const { error } = await supabase.from("profiles").update({ role }).eq("id", userId);
   if (error) throw error;
 }
 

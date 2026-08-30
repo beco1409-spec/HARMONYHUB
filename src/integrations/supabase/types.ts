@@ -442,30 +442,42 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          email: string | null
           funcao_vocal: string | null
+          funcoes: string[]
           id: string
           nome_completo: string
           notificacoes_ativas: boolean
+          perfil_configurado: boolean
+          role: string
           telefone: string | null
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          email?: string | null
           funcao_vocal?: string | null
+          funcoes?: string[]
           id: string
           nome_completo?: string
           notificacoes_ativas?: boolean
+          perfil_configurado?: boolean
+          role?: string
           telefone?: string | null
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          email?: string | null
           funcao_vocal?: string | null
+          funcoes?: string[]
           id?: string
           nome_completo?: string
           notificacoes_ativas?: boolean
+          perfil_configurado?: boolean
+          role?: string
           telefone?: string | null
           updated_at?: string
         }

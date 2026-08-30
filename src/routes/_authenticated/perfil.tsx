@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Bell,
@@ -14,6 +14,7 @@ import {
   History,
   X,
   Plus,
+  ShieldCheck,
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -388,6 +389,22 @@ function PerfilPage() {
               ))}
             </div>
           )}
+
+          {(profile?.funcoes?.length ?? 0) > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {profile!.funcoes.map((f) => (
+                <span
+                  key={f}
+                  className="rounded-full bg-primary/5 px-2.5 py-1 text-[10px] font-medium text-primary"
+                >
+                  {f}
+                </span>
+              ))}
+              <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                {profile?.role === "master" ? "Master" : "Padrão"}
+              </span>
+            </div>
+          )}
         </section>
 
         {/* Meus tons preferidos */}
@@ -563,6 +580,20 @@ function PerfilPage() {
             <span className="flex-1 text-sm font-medium">Configurações</span>
             <ChevronRight className="size-4 text-muted-foreground" />
           </button>
+          {/* Só visível para o Master — fica totalmente fora do DOM para quem é Padrão. */}
+          {profile?.role === "master" && (
+            <Link
+              to="/configuracao"
+              className="flex w-full items-center gap-3 rounded-2xl p-3 text-left hover:bg-secondary/50"
+            >
+              <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
+                <ShieldCheck className="size-4" />
+              </span>
+              <span className="flex-1 text-sm font-medium">Configuração</span>
+              <span className="text-[10px] font-bold uppercase tracking-wide text-accent">Master</span>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </Link>
+          )}
           <button
             onClick={onSignOut}
             className="flex w-full items-center gap-3 rounded-2xl p-3 text-left hover:bg-secondary/50"

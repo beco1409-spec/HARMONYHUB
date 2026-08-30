@@ -9,20 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedRepertorioRouteImport } from './routes/_authenticated/repertorio'
-import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
-import { Route as AuthenticatedEscalaRouteImport } from './routes/_authenticated/escala'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedConfiguracaoRouteImport } from './routes/_authenticated/configuracao'
 import { Route as AuthenticatedCultoRouteImport } from './routes/_authenticated/culto'
-import { Route as AuthenticatedEscalaNovoRouteImport } from './routes/_authenticated/escala.novo'
+import { Route as AuthenticatedEscalaRouteImport } from './routes/_authenticated/escala'
+import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
+import { Route as AuthenticatedRepertorioRouteImport } from './routes/_authenticated/repertorio'
+import { Route as AuthenticatedConfiguracaoUsuariosRouteImport } from './routes/_authenticated/configuracao.usuarios'
 import { Route as AuthenticatedEscalaCultoIdRouteImport } from './routes/_authenticated/escala.$cultoId'
+import { Route as AuthenticatedEscalaNovoRouteImport } from './routes/_authenticated/escala.novo'
 
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -30,23 +36,20 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRepertorioRoute = AuthenticatedRepertorioRouteImport.update({
-  id: '/repertorio',
-  path: '/repertorio',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
-  id: '/perfil',
-  path: '/perfil',
+const AuthenticatedConfiguracaoRoute =
+  AuthenticatedConfiguracaoRouteImport.update({
+    id: '/configuracao',
+    path: '/configuracao',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCultoRoute = AuthenticatedCultoRouteImport.update({
+  id: '/culto',
+  path: '/culto',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedEscalaRoute = AuthenticatedEscalaRouteImport.update({
@@ -54,31 +57,44 @@ const AuthenticatedEscalaRoute = AuthenticatedEscalaRouteImport.update({
   path: '/escala',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedCultoRoute = AuthenticatedCultoRouteImport.update({
-  id: '/culto',
-  path: '/culto',
+const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedEscalaNovoRoute = AuthenticatedEscalaNovoRouteImport.update({
-  id: '/novo',
-  path: '/novo',
-  getParentRoute: () => AuthenticatedEscalaRoute,
+const AuthenticatedRepertorioRoute = AuthenticatedRepertorioRouteImport.update({
+  id: '/repertorio',
+  path: '/repertorio',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedConfiguracaoUsuariosRoute =
+  AuthenticatedConfiguracaoUsuariosRouteImport.update({
+    id: '/usuarios',
+    path: '/usuarios',
+    getParentRoute: () => AuthenticatedConfiguracaoRoute,
+  } as any)
 const AuthenticatedEscalaCultoIdRoute =
   AuthenticatedEscalaCultoIdRouteImport.update({
     id: '/$cultoId',
     path: '/$cultoId',
     getParentRoute: () => AuthenticatedEscalaRoute,
   } as any)
+const AuthenticatedEscalaNovoRoute = AuthenticatedEscalaNovoRouteImport.update({
+  id: '/novo',
+  path: '/novo',
+  getParentRoute: () => AuthenticatedEscalaRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/configuracao': typeof AuthenticatedConfiguracaoRouteWithChildren
   '/culto': typeof AuthenticatedCultoRoute
   '/escala': typeof AuthenticatedEscalaRouteWithChildren
   '/perfil': typeof AuthenticatedPerfilRoute
   '/repertorio': typeof AuthenticatedRepertorioRoute
+  '/configuracao/usuarios': typeof AuthenticatedConfiguracaoUsuariosRoute
   '/escala/$cultoId': typeof AuthenticatedEscalaCultoIdRoute
   '/escala/novo': typeof AuthenticatedEscalaNovoRoute
 }
@@ -86,10 +102,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/configuracao': typeof AuthenticatedConfiguracaoRouteWithChildren
   '/culto': typeof AuthenticatedCultoRoute
   '/escala': typeof AuthenticatedEscalaRouteWithChildren
   '/perfil': typeof AuthenticatedPerfilRoute
   '/repertorio': typeof AuthenticatedRepertorioRoute
+  '/configuracao/usuarios': typeof AuthenticatedConfiguracaoUsuariosRoute
   '/escala/$cultoId': typeof AuthenticatedEscalaCultoIdRoute
   '/escala/novo': typeof AuthenticatedEscalaNovoRoute
 }
@@ -99,10 +117,12 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/configuracao': typeof AuthenticatedConfiguracaoRouteWithChildren
   '/_authenticated/culto': typeof AuthenticatedCultoRoute
   '/_authenticated/escala': typeof AuthenticatedEscalaRouteWithChildren
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
   '/_authenticated/repertorio': typeof AuthenticatedRepertorioRoute
+  '/_authenticated/configuracao/usuarios': typeof AuthenticatedConfiguracaoUsuariosRoute
   '/_authenticated/escala/$cultoId': typeof AuthenticatedEscalaCultoIdRoute
   '/_authenticated/escala/novo': typeof AuthenticatedEscalaNovoRoute
 }
@@ -112,10 +132,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/configuracao'
     | '/culto'
     | '/escala'
     | '/perfil'
     | '/repertorio'
+    | '/configuracao/usuarios'
     | '/escala/$cultoId'
     | '/escala/novo'
   fileRoutesByTo: FileRoutesByTo
@@ -123,10 +145,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/configuracao'
     | '/culto'
     | '/escala'
     | '/perfil'
     | '/repertorio'
+    | '/configuracao/usuarios'
     | '/escala/$cultoId'
     | '/escala/novo'
   id:
@@ -135,10 +159,12 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/configuracao'
     | '/_authenticated/culto'
     | '/_authenticated/escala'
     | '/_authenticated/perfil'
     | '/_authenticated/repertorio'
+    | '/_authenticated/configuracao/usuarios'
     | '/_authenticated/escala/$cultoId'
     | '/_authenticated/escala/novo'
   fileRoutesById: FileRoutesById
@@ -152,18 +178,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -173,32 +192,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/repertorio': {
-      id: '/_authenticated/repertorio'
-      path: '/repertorio'
-      fullPath: '/repertorio'
-      preLoaderRoute: typeof AuthenticatedRepertorioRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/perfil': {
-      id: '/_authenticated/perfil'
-      path: '/perfil'
-      fullPath: '/perfil'
-      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/escala': {
-      id: '/_authenticated/escala'
-      path: '/escala'
-      fullPath: '/escala'
-      preLoaderRoute: typeof AuthenticatedEscalaRouteImport
+    '/_authenticated/configuracao': {
+      id: '/_authenticated/configuracao'
+      path: '/configuracao'
+      fullPath: '/configuracao'
+      preLoaderRoute: typeof AuthenticatedConfiguracaoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/culto': {
@@ -208,12 +220,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCultoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/escala/novo': {
-      id: '/_authenticated/escala/novo'
-      path: '/novo'
-      fullPath: '/escala/novo'
-      preLoaderRoute: typeof AuthenticatedEscalaNovoRouteImport
-      parentRoute: typeof AuthenticatedEscalaRoute
+    '/_authenticated/escala': {
+      id: '/_authenticated/escala'
+      path: '/escala'
+      fullPath: '/escala'
+      preLoaderRoute: typeof AuthenticatedEscalaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/perfil': {
+      id: '/_authenticated/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/repertorio': {
+      id: '/_authenticated/repertorio'
+      path: '/repertorio'
+      fullPath: '/repertorio'
+      preLoaderRoute: typeof AuthenticatedRepertorioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/configuracao/usuarios': {
+      id: '/_authenticated/configuracao/usuarios'
+      path: '/usuarios'
+      fullPath: '/configuracao/usuarios'
+      preLoaderRoute: typeof AuthenticatedConfiguracaoUsuariosRouteImport
+      parentRoute: typeof AuthenticatedConfiguracaoRoute
     }
     '/_authenticated/escala/$cultoId': {
       id: '/_authenticated/escala/$cultoId'
@@ -222,8 +255,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEscalaCultoIdRouteImport
       parentRoute: typeof AuthenticatedEscalaRoute
     }
+    '/_authenticated/escala/novo': {
+      id: '/_authenticated/escala/novo'
+      path: '/novo'
+      fullPath: '/escala/novo'
+      preLoaderRoute: typeof AuthenticatedEscalaNovoRouteImport
+      parentRoute: typeof AuthenticatedEscalaRoute
+    }
   }
 }
+
+interface AuthenticatedConfiguracaoRouteChildren {
+  AuthenticatedConfiguracaoUsuariosRoute: typeof AuthenticatedConfiguracaoUsuariosRoute
+}
+
+const AuthenticatedConfiguracaoRouteChildren: AuthenticatedConfiguracaoRouteChildren =
+  {
+    AuthenticatedConfiguracaoUsuariosRoute:
+      AuthenticatedConfiguracaoUsuariosRoute,
+  }
+
+const AuthenticatedConfiguracaoRouteWithChildren =
+  AuthenticatedConfiguracaoRoute._addFileChildren(
+    AuthenticatedConfiguracaoRouteChildren,
+  )
 
 interface AuthenticatedEscalaRouteChildren {
   AuthenticatedEscalaCultoIdRoute: typeof AuthenticatedEscalaCultoIdRoute
@@ -239,6 +294,7 @@ const AuthenticatedEscalaRouteWithChildren =
   AuthenticatedEscalaRoute._addFileChildren(AuthenticatedEscalaRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedConfiguracaoRoute: typeof AuthenticatedConfiguracaoRouteWithChildren
   AuthenticatedCultoRoute: typeof AuthenticatedCultoRoute
   AuthenticatedEscalaRoute: typeof AuthenticatedEscalaRouteWithChildren
   AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
@@ -246,6 +302,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedConfiguracaoRoute: AuthenticatedConfiguracaoRouteWithChildren,
   AuthenticatedCultoRoute: AuthenticatedCultoRoute,
   AuthenticatedEscalaRoute: AuthenticatedEscalaRouteWithChildren,
   AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
@@ -264,3 +321,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

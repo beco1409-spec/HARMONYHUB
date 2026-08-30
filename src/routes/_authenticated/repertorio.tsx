@@ -7,7 +7,7 @@ import {
   ChevronUp,
   ChevronDown,
   X,
-  Pencil,
+  Eye,
   Trash2,
   Star,
   Plus,
@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import { MusicaForm } from "@/components/MusicaForm";
 import { MusicaPicker } from "@/components/MusicaPicker";
+import { MusicaViewer } from "@/components/MusicaViewer";
 import { useAuth } from "@/hooks/use-auth";
 import {
   addFavorito,
@@ -56,6 +57,7 @@ function RepertorioPage() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Musica | null>(null);
+  const [viewing, setViewing] = useState<Musica | null>(null);
 
   const { data: proximo, isLoading: loadingCulto } = useQuery({
     queryKey: ["proximo-culto"],
@@ -359,7 +361,8 @@ function RepertorioPage() {
               return (
                 <li
                   key={m.id}
-                  className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3"
+                  onClick={() => setViewing(m)}
+                  className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-surface p-3"
                 >
                   <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-accent/10 text-accent">
                     <Music2 className="size-4" />
@@ -410,7 +413,10 @@ function RepertorioPage() {
                   <div className="flex shrink-0 items-center gap-0.5">
                     <button
                       aria-label={fav ? `Desfavoritar ${m.nome}` : `Favoritar ${m.nome}`}
-                      onClick={() => toggleFavorito.mutate({ musicaId: m.id, fav })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorito.mutate({ musicaId: m.id, fav });
+                      }}
                       className={`grid size-7 place-items-center rounded-full ${
                         fav ? "text-accent" : "text-muted-foreground"
                       }`}
@@ -418,18 +424,19 @@ function RepertorioPage() {
                       <Star className="size-4" fill={fav ? "currentColor" : "none"} />
                     </button>
                     <button
-                      aria-label={`Editar ${m.nome}`}
-                      onClick={() => {
-                        setEditing(m);
-                        setFormOpen(true);
+                      aria-label={`Ver cifra de ${m.nome}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setViewing(m);
                       }}
-                      className="grid size-7 place-items-center rounded-full text-muted-foreground hover:text-foreground"
+                      className="grid size-7 place-items-center rounded-full text-muted-foreground hover:text-accent"
                     >
-                      <Pencil className="size-3.5" />
+                      <Eye className="size-3.5" />
                     </button>
                     <button
                       aria-label={`Excluir ${m.nome}`}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         if (confirm(`Excluir "${m.nome}" da biblioteca?`)) {
                           excluirMusica.mutate(m.id);
                         }
@@ -454,6 +461,18 @@ function RepertorioPage() {
           onCreateNew={() => {
             setPickerOpen(false);
             setEditing(null);
+            setFormOpen(true);
+          }}
+        />
+      )}
+
+      {viewing && (
+        <MusicaViewer
+          musica={viewing}
+          onClose={() => setViewing(null)}
+          onEdit={() => {
+            setEditing(viewing);
+            setViewing(null);
             setFormOpen(true);
           }}
         />
