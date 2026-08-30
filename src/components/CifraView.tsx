@@ -16,14 +16,16 @@ export function CifraView({
   text,
   semitones = 0,
   className = "",
+  sizeClass = "text-[13px]",
 }: {
   text: string;
   semitones?: number;
   className?: string;
+  sizeClass?: string;
 }) {
   const parsed = useMemo(() => parseCifra(text), [text]);
   return (
-    <div className={`font-mono text-[13px] leading-relaxed ${className}`}>
+    <div className={`font-mono ${sizeClass} leading-relaxed ${className}`}>
       {parsed.lines.map((line, i) => (
         <CifraLineView key={i} line={line} semitones={semitones} />
       ))}

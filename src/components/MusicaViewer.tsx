@@ -1,122 +1,108 @@
 import { useState } from "react";
-import { X, Pencil, Youtube, FileMusic } from "lucide-react";
+import { ArrowLeft, CaseSensitive, Pencil, Star } from "lucide-react";
 import { CifraView } from "@/components/CifraView";
 import { transposeTom } from "@/lib/transpose";
 import type { Musica } from "@/lib/db";
 
+const TAMANHOS = ["text-[12px]", "text-[14px]", "text-[16px]"] as const;
+
 /**
- * Visualização somente-leitura da cifra de uma música da biblioteca.
- * Reaproveita o mesmo CifraView usado no Modo Culto Ao Vivo, permitindo
- * consultar letra, cifra e transpor o tom sem precisar entrar em nenhum
- * culto agendado.
+ * Leitor de cifra em tela cheia, no estilo de um app de cifras: seta de
+ * voltar, título, tamanho de fonte e favorito no topo; tom em destaque com
+ * seletor circular (−/tom/+); cifra renderizada linha do acorde acima da
+ * linha da letra, com editar música ao final. Acessível a partir da
+ * Biblioteca sem precisar entrar em nenhum culto agendado.
  */
 export function MusicaViewer({
   musica,
+  favorito = false,
+  onToggleFavorito,
   onClose,
   onEdit,
 }: {
   musica: Musica;
+  favorito?: boolean;
+  onToggleFavorito?: () => void;
   onClose: () => void;
   onEdit: () => void;
 }) {
   const [offset, setOffset] = useState(0);
+  const [tamanho, setTamanho] = useState(1);
 
   const tomBase = musica.tom_original ?? "—";
   const tomExibido = tomBase !== "—" ? transposeTom(tomBase, offset) : "—";
   const conteudo = musica.cifra || musica.letra || "Cifra não cadastrada para esta música.";
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-background pb-8 pt-4 shadow-elegant"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border" />
-
-        <div className="flex items-start justify-between px-5 pb-1">
-          <div className="min-w-0">
-            <h3 className="truncate font-serif text-lg italic">{musica.nome}</h3>
-            <p className="truncate text-[12px] text-muted-foreground">
-              {musica.autor || "—"}
-            </p>
-          </div>
+    <div className="fixed inset-0 z-50 flex flex-col bg-background">
+      <header className="flex shrink-0 items-center justify-between border-b border-border px-4 py-3">
+        <button
+          onClick={onClose}
+          aria-label="Voltar"
+          className="grid size-9 place-items-center rounded-full text-foreground hover:bg-secondary"
+        >
+          <ArrowLeft className="size-5" />
+        </button>
+        <h1 className="font-serif text-lg italic">Cifras</h1>
+        <div className="flex items-center gap-1">
           <button
-            onClick={onClose}
-            aria-label="Fechar"
-            className="grid size-8 shrink-0 place-items-center rounded-full bg-secondary"
+            onClick={() => setTamanho((t) => (t + 1) % TAMANHOS.length)}
+            aria-label="Alterar tamanho da letra"
+            className="grid size-9 place-items-center rounded-full text-foreground hover:bg-secondary"
           >
-            <X className="size-4" />
+            <CaseSensitive className="size-5" />
+          </button>
+          {onToggleFavorito && (
+            <button
+              onClick={onToggleFavorito}
+              aria-label={favorito ? "Desfavoritar" : "Favoritar"}
+              className={`grid size-9 place-items-center rounded-full hover:bg-secondary ${
+                favorito ? "text-accent" : "text-foreground"
+              }`}
+            >
+              <Star className="size-5" fill={favorito ? "currentColor" : "none"} />
+            </button>
+          )}
+        </div>
+      </header>
+
+      <div className="flex-1 overflow-y-auto px-5 pb-24 pt-5">
+        <h2 className="font-serif text-2xl italic">{musica.nome}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Tom {tomBase}</p>
+        {musica.autor && (
+          <p className="text-sm text-muted-foreground">{musica.autor}</p>
+        )}
+
+        <div className="my-5 flex items-center justify-center gap-3">
+          <button
+            onClick={() => setOffset((o) => o - 1)}
+            aria-label="Transpor um tom abaixo"
+            className="grid size-11 place-items-center rounded-full border border-border text-lg font-semibold"
+          >
+            −
+          </button>
+          <span className="grid size-11 place-items-center rounded-full border border-border font-mono text-base font-bold text-accent">
+            {tomExibido}
+          </span>
+          <button
+            onClick={() => setOffset((o) => o + 1)}
+            aria-label="Transpor um tom acima"
+            className="grid size-11 place-items-center rounded-full border border-border text-lg font-semibold"
+          >
+            +
           </button>
         </div>
 
-        <div className="flex items-center gap-2 px-5 pt-2">
-          {musica.youtube_url && (
-            <a
-              href={musica.youtube_url}
-              target="_blank"
-              rel="noreferrer"
-              className="grid size-7 place-items-center rounded-full bg-secondary text-muted-foreground hover:text-foreground"
-              aria-label="Abrir no YouTube"
-            >
-              <Youtube className="size-3.5" />
-            </a>
-          )}
-          {musica.cifraclub_url && (
-            <a
-              href={musica.cifraclub_url}
-              target="_blank"
-              rel="noreferrer"
-              className="grid size-7 place-items-center rounded-full bg-secondary text-muted-foreground hover:text-foreground"
-              aria-label="Abrir no Cifra Club"
-            >
-              <FileMusic className="size-3.5" />
-            </a>
-          )}
-          {musica.bpm && (
-            <span className="rounded-full bg-secondary px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
-              {musica.bpm} BPM
-            </span>
-          )}
-        </div>
+        <CifraView text={conteudo} semitones={offset} sizeClass={TAMANHOS[tamanho]} />
+      </div>
 
-        <section className="mt-4 rounded-t-3xl bg-background px-5 pt-4">
-          <div className="mb-4 flex items-center justify-between">
-            <h4 className="font-serif text-base italic">Cifra & Letra</h4>
-            <div className="flex gap-1">
-              <button
-                onClick={() => setOffset((o) => o - 1)}
-                className="rounded-lg border border-border bg-surface px-2.5 py-1 text-xs font-semibold"
-                aria-label="Transpor um tom abaixo"
-              >
-                −
-              </button>
-              <span className="rounded-lg border border-border bg-surface px-2.5 py-1 text-xs font-mono font-semibold text-accent">
-                {tomExibido}
-              </span>
-              <button
-                onClick={() => setOffset((o) => o + 1)}
-                className="rounded-lg border border-border bg-surface px-2.5 py-1 text-xs font-semibold"
-                aria-label="Transpor um tom acima"
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          <CifraView text={conteudo} semitones={offset} />
-        </section>
-
-        <div className="px-5 pt-6">
-          <button
-            onClick={onEdit}
-            className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-border bg-surface py-3 text-xs font-bold uppercase tracking-wider text-foreground"
-          >
-            <Pencil className="size-3.5" /> Editar música
-          </button>
-        </div>
+      <div className="shrink-0 border-t border-border bg-background px-5 py-3">
+        <button
+          onClick={onEdit}
+          className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-border bg-surface py-3 text-xs font-bold uppercase tracking-wider text-foreground"
+        >
+          <Pencil className="size-3.5" /> Editar música
+        </button>
       </div>
     </div>
   );

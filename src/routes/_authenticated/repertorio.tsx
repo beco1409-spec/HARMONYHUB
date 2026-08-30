@@ -469,6 +469,13 @@ function RepertorioPage() {
       {viewing && (
         <MusicaViewer
           musica={viewing}
+          favorito={favoritos.includes(viewing.id)}
+          onToggleFavorito={() =>
+            toggleFavorito.mutate({
+              musicaId: viewing.id,
+              fav: favoritos.includes(viewing.id),
+            })
+          }
           onClose={() => setViewing(null)}
           onEdit={() => {
             setEditing(viewing);
