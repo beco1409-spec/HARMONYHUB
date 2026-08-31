@@ -11,16 +11,21 @@ import {
   Calendar,
   Send,
   Trash2,
+  Bell,
+  Users,
+  Music2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AppShell, AppHeader } from "@/components/AppShell";
+import { AppShell } from "@/components/AppShell";
 import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 import {
   createAviso,
   deleteAviso,
   formatCultoData,
   formatHora,
+  getAvatarSignedUrl,
   getCultosSemana,
   getLiveSession,
   getProximoCultoFull,
@@ -29,6 +34,13 @@ import {
   tempoRelativo,
 } from "@/lib/db";
 import { supabase } from "@/integrations/supabase/client";
+
+function saudacao() {
+  const h = new Date().getHours();
+  if (h < 12) return "Bom dia";
+  if (h < 18) return "Boa tarde";
+  return "Boa noite";
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,44 +56,18 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-function Countdown({ target }: { target: Date }) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 30000);
-    return () => clearInterval(t);
-  }, []);
-
-  const diff = Math.max(0, target.getTime() - now);
-  const dias = Math.floor(diff / 86400000);
-  const horas = Math.floor((diff % 86400000) / 3600000);
-  const mins = Math.floor((diff % 3600000) / 60000);
-
-  if (diff <= 0) {
-    return <p className="font-serif text-2xl italic text-accent">É hoje!</p>;
-  }
-
-  return (
-    <div className="flex gap-5">
-      {[
-        { v: String(dias).padStart(2, "0"), l: "Dias" },
-        { v: String(horas).padStart(2, "0"), l: "Horas" },
-        { v: String(mins).padStart(2, "0"), l: "Min" },
-      ].map((c) => (
-        <div key={c.l} className="text-center">
-          <p className="font-serif text-3xl font-bold text-primary-foreground">{c.v}</p>
-          <p className="text-[10px] uppercase tracking-widest text-primary-foreground/50">
-            {c.l}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function Dashboard() {
   const { user, loading } = useAuth();
   const qc = useQueryClient();
   const [novoAviso, setNovoAviso] = useState("");
+
+  const { data: profile } = useProfile(user);
+
+  const { data: avatarUrl } = useQuery({
+    queryKey: ["avatar-url", profile?.avatar_url],
+    queryFn: () => getAvatarSignedUrl(profile?.avatar_url ?? null),
+    enabled: !!profile?.avatar_url,
+  });
 
   const { data: proximo } = useQuery({
     queryKey: ["proximo-culto"],
@@ -142,47 +128,71 @@ function Dashboard() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const iniciais = ((user?.user_metadata?.full_name as string) || user?.email || "GA")
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((s: string) => s[0]?.toUpperCase())
-    .join("");
+  const nomeCompleto =
+    profile?.nome_completo || (user?.user_metadata?.full_name as string) || user?.email || "";
+  const iniciais = iniciaisDe(nomeCompleto) || "GA";
+  const primeiroNome = nomeCompleto.split(/\s+/)[0] || "";
+
+  const hojeStr = new Date().toLocaleDateString("pt-BR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
 
   const confirmados = proximo?.integrantes_culto.filter((i) => i.status === "confirmado") ?? [];
   const pendentes = proximo?.integrantes_culto.filter((i) => i.status === "pendente") ?? [];
   const repertorio = proximo?.repertorio ?? [];
-  const cultoDate = proximo ? new Date(`${proximo.data}T${proximo.hora}`) : null;
-
-  const musicaLive = live?.repertorio;
-  const nomeMusicaLive = musicaLive?.musica?.nome;
-  const tomLive = musicaLive?.tom_override ?? musicaLive?.musica?.tom_original;
-
   return (
     <AppShell>
-      <AppHeader
-        eyebrow={user ? "Shalom" : "Bem-vindo"}
-        title="Adoração & Vida"
-        right={
-          user ? (
-            <Link
-              to="/perfil"
-              className="grid size-11 place-items-center rounded-full bg-primary text-primary-foreground font-semibold ring-2 ring-accent/20"
-            >
-              {iniciais}
-            </Link>
+      <header className="flex items-center justify-between px-4 pt-2">
+        <div className="min-w-0">
+          {user ? (
+            <>
+              <h1 className="truncate font-serif text-2xl italic">
+                {saudacao()}, {primeiroNome || "visitante"}! 👋
+              </h1>
+              <p className="mt-0.5 text-xs capitalize text-muted-foreground">{hojeStr}</p>
+            </>
           ) : (
-            <Link
-              to="/auth"
-              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground"
+            <h1 className="font-serif text-2xl italic">Bem-vindo</h1>
+          )}
+        </div>
+        {user ? (
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              onClick={() =>
+                document.getElementById("avisos")?.scrollIntoView({ behavior: "smooth" })
+              }
+              aria-label="Avisos"
+              className="grid size-10 place-items-center rounded-full bg-surface text-foreground"
             >
-              <LogIn className="size-3.5" /> Entrar
+              <Bell className="size-4" />
+            </button>
+            <Link to="/perfil" className="shrink-0">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt=""
+                  className="size-11 rounded-full object-cover ring-2 ring-accent/20"
+                />
+              ) : (
+                <span className="grid size-11 place-items-center rounded-full bg-primary font-semibold text-primary-foreground ring-2 ring-accent/20">
+                  {iniciais}
+                </span>
+              )}
             </Link>
-          )
-        }
-      />
+          </div>
+        ) : (
+          <Link
+            to="/auth"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground"
+          >
+            <LogIn className="size-3.5" /> Entrar
+          </Link>
+        )}
+      </header>
 
-      <main className="grid grid-cols-2 gap-3 px-4">
+      <main className="grid grid-cols-2 gap-3 px-4 pt-4">
         {/* Hero: próximo culto */}
         <section className="col-span-2 relative overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground shadow-elegant">
           <div className="relative z-10">
@@ -220,9 +230,50 @@ function Dashboard() {
                     <MapPin className="size-3" /> {proximo.local}
                   </p>
                 )}
-                <div className="mt-5">
-                  <Countdown target={cultoDate!} />
+
+                {/* Estatísticas do culto */}
+                <div className="mt-5 grid grid-cols-3 gap-2 border-t border-primary-foreground/10 pt-4">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-primary-foreground/50">
+                      Equipe
+                    </p>
+                    <p className="mt-1 font-serif text-xl font-bold">
+                      {proximo.integrantes_culto.length}
+                    </p>
+                    <p className="text-[10px] text-primary-foreground/50">Escalados</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-primary-foreground/50">
+                      Músicas
+                    </p>
+                    <p className="mt-1 font-serif text-xl font-bold">{repertorio.length}</p>
+                    <p className="text-[10px] text-primary-foreground/50">No repertório</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-primary-foreground/50">
+                      Status
+                    </p>
+                    <span
+                      className={`mt-1 inline-block rounded-full px-2 py-1 text-[10px] font-bold ${
+                        confirmados.length > 0 && pendentes.length === 0
+                          ? "bg-emerald-500/20 text-emerald-300"
+                          : "bg-primary-foreground/10 text-primary-foreground/70"
+                      }`}
+                    >
+                      {confirmados.length > 0 && pendentes.length === 0
+                        ? "Escala pronta"
+                        : `${pendentes.length} pendentes`}
+                    </span>
+                  </div>
                 </div>
+
+                <Link
+                  to="/culto"
+                  className="mt-5 flex items-center justify-center gap-2 rounded-full bg-accent py-3 text-xs font-bold uppercase tracking-wider text-accent-foreground"
+                >
+                  <Play className="size-3.5" fill="currentColor" />{" "}
+                  {live ? "Entrar no Modo Culto" : "Iniciar Modo Culto"}
+                </Link>
               </>
             ) : (
               <>
@@ -244,156 +295,78 @@ function Dashboard() {
 
         {user && (
           <>
-            {/* Escala resumo */}
+            {/* Visão geral */}
+            <h3 className="col-span-2 mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Visão Geral
+            </h3>
+
             <Link
               to="/escala"
-              className="col-span-1 flex flex-col justify-between rounded-3xl border border-border bg-surface p-4"
+              className="col-span-1 flex flex-col items-start gap-2 rounded-3xl border border-border bg-surface p-4"
             >
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Escala
-              </h3>
-              <div className="my-3 flex -space-x-2">
-                {proximo && proximo.integrantes_culto.length > 0 ? (
-                  <>
-                    {proximo.integrantes_culto.slice(0, 4).map((i) => (
-                      <div
-                        key={i.id}
-                        className="grid size-8 place-items-center rounded-full border-2 border-surface bg-secondary text-[10px] font-semibold text-secondary-foreground"
-                      >
-                        {iniciaisDe(i.cantor?.nome ?? i.instrumentista?.nome)}
-                      </div>
-                    ))}
-                    {proximo.integrantes_culto.length > 4 && (
-                      <div className="grid size-8 place-items-center rounded-full border-2 border-surface bg-primary/10 text-[10px] font-bold text-primary">
-                        +{proximo.integrantes_culto.length - 4}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-xs text-muted-foreground">Sem integrantes escalados</p>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                <span className="font-semibold text-emerald-600">
-                  {confirmados.length} confirmados
-                </span>
-                <br />
-                {pendentes.length} pendentes
+              <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
+                <Users className="size-4" />
+              </span>
+              <p className="font-serif text-xl font-bold text-foreground">
+                {proximo?.integrantes_culto.length ?? 0}
+              </p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Equipe
               </p>
             </Link>
 
-            {/* Playlist preview */}
             <Link
               to="/repertorio"
-              className="col-span-1 flex flex-col rounded-3xl border border-border bg-surface p-4"
-            >
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Músicas
-              </h3>
-              {repertorio.length > 0 ? (
-                <ul className="mt-3 space-y-1.5">
-                  {repertorio.slice(0, 3).map((r, idx) => (
-                    <li key={r.id} className="truncate text-[11px] font-medium text-foreground">
-                      {idx + 1}. {r.musica?.nome ?? "—"}{" "}
-                      <span className="text-muted-foreground">
-                        ({r.tom_override ?? r.musica?.tom_original ?? "?"})
-                      </span>
-                    </li>
-                  ))}
-                  {repertorio.length > 3 && (
-                    <li className="truncate text-[11px] text-muted-foreground">
-                      + {repertorio.length - 3} outras
-                    </li>
-                  )}
-                </ul>
-              ) : (
-                <p className="mt-3 text-xs text-muted-foreground">
-                  Nenhuma música no repertório ainda.
-                </p>
-              )}
-            </Link>
-
-            {/* Modo Culto Live */}
-            <Link
-              to="/culto"
-              className="col-span-2 rounded-3xl border border-accent/25 bg-accent/10 p-5"
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="relative flex size-2">
-                    {live && (
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-                    )}
-                    <span className="relative inline-flex size-2 rounded-full bg-accent" />
-                  </span>
-                  <h3 className="text-sm font-bold uppercase tracking-tight text-accent">
-                    Modo Culto Live
-                  </h3>
-                </div>
-                {musicaLive?.musica?.bpm && (
-                  <span className="rounded-md bg-accent/20 px-2 py-0.5 text-[10px] font-semibold text-accent">
-                    {musicaLive.musica.bpm} BPM
-                  </span>
-                )}
-              </div>
-              <div className="flex items-end justify-between gap-3">
-                <div className="min-w-0">
-                  {live && nomeMusicaLive ? (
-                    <>
-                      <p className="text-[10px] font-bold uppercase text-muted-foreground">
-                        Em execução
-                      </p>
-                      <p className="truncate font-serif text-xl italic text-foreground">
-                        {nomeMusicaLive}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground">
-                        Tom {tomLive ?? "—"}
-                        {musicaLive?.cantor?.nome ? ` • ${musicaLive.cantor.nome}` : ""}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-[10px] font-bold uppercase text-muted-foreground">
-                        {proximo ? "Pronto para começar" : "Aguardando culto"}
-                      </p>
-                      <p className="truncate font-serif text-xl italic text-foreground">
-                        {proximo ? proximo.nome : "Nenhum culto agendado"}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {proximo
-                          ? `${repertorio.length} músicas no repertório`
-                          : "Crie um culto na aba Escala"}
-                      </p>
-                    </>
-                  )}
-                </div>
-                <span className="shrink-0 rounded-full bg-accent px-4 py-2 text-xs font-bold text-accent-foreground">
-                  {live ? "ENTRAR" : "INICIAR"}
-                </span>
-              </div>
-            </Link>
-
-            {/* Atalhos */}
-            <Link
-              to="/repertorio"
-              className="col-span-1 flex items-center gap-3 rounded-3xl border border-border bg-surface p-4 text-left"
+              className="col-span-1 flex flex-col items-start gap-2 rounded-3xl border border-border bg-surface p-4"
             >
               <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
-                <FileText className="size-4" />
+                <Music2 className="size-4" />
               </span>
-              <span className="text-xs font-semibold">Cifras</span>
+              <p className="font-serif text-xl font-bold text-foreground">{repertorio.length}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Músicas
+              </p>
             </Link>
+
             <button
               onClick={() =>
                 document.getElementById("avisos")?.scrollIntoView({ behavior: "smooth" })
               }
-              className="col-span-1 flex items-center gap-3 rounded-3xl border border-border bg-surface p-4 text-left"
+              className="col-span-1 flex flex-col items-start gap-2 rounded-3xl border border-border bg-surface p-4 text-left"
             >
               <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
                 <MessageCircle className="size-4" />
               </span>
-              <span className="text-xs font-semibold">Avisos</span>
+              <p className="font-serif text-xl font-bold text-foreground">{avisos.length}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Avisos
+              </p>
             </button>
+
+            <Link
+              to="/escala"
+              className="col-span-1 flex flex-col items-start gap-2 rounded-3xl border border-border bg-surface p-4"
+            >
+              <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
+                <Calendar className="size-4" />
+              </span>
+              <p className="font-serif text-xl font-bold text-foreground">{semana.length}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Próximos
+              </p>
+            </Link>
+
+            {/* Cifras (atalho) */}
+            <Link
+              to="/repertorio"
+              className="col-span-2 flex items-center gap-3 rounded-3xl border border-border bg-surface p-4 text-left"
+            >
+              <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
+                <FileText className="size-4" />
+              </span>
+              <span className="text-xs font-semibold">Ver cifras da biblioteca</span>
+              <ChevronRight className="ml-auto size-4 text-muted-foreground" />
+            </Link>
 
             {/* Avisos */}
             <section
@@ -463,17 +436,17 @@ function Dashboard() {
               </div>
             </section>
 
-            {/* Agenda da semana */}
+            {/* Próximos eventos */}
             <section className="col-span-2 rounded-3xl border border-border bg-surface p-5">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  Agenda da Semana
+                  Próximos Eventos
                 </h3>
                 <Link
                   to="/escala"
                   className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-muted-foreground"
                 >
-                  Ver tudo <ChevronRight className="size-3" />
+                  Ver todos <ChevronRight className="size-3" />
                 </Link>
               </div>
               <div className="space-y-4">
@@ -506,7 +479,10 @@ function Dashboard() {
                       </div>
                       <div className="h-8 w-px bg-border" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-foreground">{c.nome}</p>
+                        <p className="truncate text-sm font-medium text-foreground">
+                          {destaque && "Hoje • "}
+                          {c.nome}
+                        </p>
                         <p className="truncate text-[11px] text-muted-foreground">
                           {formatHora(c.hora)}
                           {c.local ? ` • ${c.local}` : ""}
@@ -517,14 +493,6 @@ function Dashboard() {
                 })}
               </div>
             </section>
-
-            {/* Ação principal */}
-            <Link
-              to="/culto"
-              className="col-span-2 mt-2 flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-accent/40 bg-accent/5 py-4 text-sm font-bold uppercase tracking-wider text-accent"
-            >
-              <Play className="size-4" fill="currentColor" /> Iniciar Modo Culto
-            </Link>
           </>
         )}
       </main>
