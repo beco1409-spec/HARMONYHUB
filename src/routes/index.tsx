@@ -14,7 +14,6 @@ import {
   Bell,
   Users,
   Music2,
-  Bird,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -148,7 +147,7 @@ function Dashboard() {
       <header className="flex items-center justify-between px-4 pt-2">
         <div className="min-w-0">
           <div className="mb-3 flex items-center gap-1.5">
-            <Bird className="size-3.5 text-primary" />
+            <img src="/logo-comunidade-cristo.png" alt="" className="size-5 shrink-0" />
             <div className="leading-tight">
               <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
                 Shalom
@@ -205,13 +204,10 @@ function Dashboard() {
       <main className="grid grid-cols-2 gap-3 px-4 pt-4">
         {/* Hero: próximo culto */}
         <section className="col-span-2 relative overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground shadow-elegant">
-          <div
-            className="absolute inset-0 opacity-[0.07]"
-            style={{
-              backgroundImage:
-                "radial-gradient(currentColor 1px, transparent 1px)",
-              backgroundSize: "16px 16px",
-            }}
+          <img
+            src="/logo-comunidade-cristo.png"
+            alt=""
+            className="pointer-events-none absolute -right-10 -bottom-10 size-52 opacity-[0.12]"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/40" />
           <div className="relative z-10">
@@ -309,7 +305,6 @@ function Dashboard() {
               </>
             )}
           </div>
-          <div className="absolute -right-16 -bottom-16 size-56 rounded-full bg-accent/25 blur-3xl" />
         </section>
 
         {user && (

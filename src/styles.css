@@ -5,9 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Sacred Modernism — Louvor ministry app
- * Palette: cream surface, dark navy primary, amber accent
- * Type: Playfair Display (serif headings) + Inter (sans body)
+ * Comunidade de Cristo — Louvor ministry app
+ * Palette: cream surface, dark green primary, vibrant green accent
+ * (cores extraídas da logo da igreja)
+ * Type: Inter (sans, bold headings + body)
  */
 
 @theme inline {
@@ -60,7 +61,7 @@
   --popover: #ffffff;
   --popover-foreground: #0f172a;
 
-  --primary: #0f172a;
+  --primary: #1b5e3a;
   --primary-foreground: #f8fafc;
 
   --secondary: #f1f5f9;
@@ -69,7 +70,7 @@
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
 
-  --accent: #d97706;
+  --accent: #2f9e58;
   --accent-foreground: #ffffff;
 
   --destructive: #dc2626;
@@ -79,7 +80,7 @@
 
   --border: rgb(15 23 42 / 0.08);
   --input: rgb(15 23 42 / 0.08);
-  --ring: #d97706;
+  --ring: #2f9e58;
 }
 
 .dark {
@@ -101,12 +102,12 @@
   --muted: #1e293b;
   --muted-foreground: #94a3b8;
 
-  --accent: #f59e0b;
-  --accent-foreground: #0f172a;
+  --accent: #34b56a;
+  --accent-foreground: #06210f;
 
   --border: rgb(248 250 252 / 0.08);
   --input: rgb(248 250 252 / 0.08);
-  --ring: #f59e0b;
+  --ring: #34b56a;
 }
 
 @layer base {
