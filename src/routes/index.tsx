@@ -14,6 +14,7 @@ import {
   Bell,
   Users,
   Music2,
+  Bird,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -146,6 +147,15 @@ function Dashboard() {
     <AppShell>
       <header className="flex items-center justify-between px-4 pt-2">
         <div className="min-w-0">
+          <div className="mb-3 flex items-center gap-1.5">
+            <Bird className="size-3.5 text-primary" />
+            <div className="leading-tight">
+              <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
+                Shalom
+              </p>
+              <p className="-mt-0.5 text-[11px] font-bold text-foreground">Adoração &amp; Vida</p>
+            </div>
+          </div>
           {user ? (
             <>
               <h1 className="truncate font-sans font-bold text-2xl">
@@ -195,6 +205,15 @@ function Dashboard() {
       <main className="grid grid-cols-2 gap-3 px-4 pt-4">
         {/* Hero: próximo culto */}
         <section className="col-span-2 relative overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground shadow-elegant">
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "radial-gradient(currentColor 1px, transparent 1px)",
+              backgroundSize: "16px 16px",
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/40" />
           <div className="relative z-10">
             <span className="inline-block rounded-md bg-accent px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-foreground">
               Próximo Culto
