@@ -168,7 +168,7 @@ export function MusicaForm({
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border" />
         <div className="flex items-center justify-between px-5 pb-3">
-          <h3 className="font-serif text-lg italic">
+          <h3 className="font-sans font-bold text-lg">
             {editing ? "Editar música" : "Nova música"}
           </h3>
           <button

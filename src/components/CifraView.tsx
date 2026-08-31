@@ -47,7 +47,7 @@ function CifraLineView({ line, semitones }: { line: CifraLine; semitones: number
           : t.type === "titulo"
             ? "font-semibold text-muted-foreground"
             : t.type === "anotacao"
-              ? "italic text-muted-foreground"
+              ? "text-muted-foreground"
               : "text-foreground";
         return (
           <span key={i} className={cls}>

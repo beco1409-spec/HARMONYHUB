@@ -52,7 +52,7 @@ export function ProfileSetupModal({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 py-8 backdrop-blur-sm">
       <div className="max-h-full w-full max-w-md overflow-y-auto rounded-3xl bg-background p-6 shadow-elegant">
-        <h1 className="font-serif text-2xl italic text-foreground">Configure seu perfil</h1>
+        <h1 className="font-sans font-bold text-2xl text-foreground">Configure seu perfil</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Antes de continuar, conte pra gente quem você é e como participa do ministério.
         </p>

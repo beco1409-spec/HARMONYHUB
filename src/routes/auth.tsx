@@ -128,7 +128,7 @@ function AuthPage() {
         <Link to="/" className="mb-8 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
           ← Voltar
         </Link>
-        <h1 className="font-serif text-4xl italic text-foreground">{titulo}</h1>
+        <h1 className="font-sans font-bold text-4xl text-foreground">{titulo}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{subtitulo}</p>
 
         {info && (

@@ -148,13 +148,13 @@ function Dashboard() {
         <div className="min-w-0">
           {user ? (
             <>
-              <h1 className="truncate font-serif text-2xl italic">
+              <h1 className="truncate font-sans font-bold text-2xl">
                 {saudacao()}, {primeiroNome || "visitante"}! 👋
               </h1>
               <p className="mt-0.5 text-xs capitalize text-muted-foreground">{hojeStr}</p>
             </>
           ) : (
-            <h1 className="font-serif text-2xl italic">Bem-vindo</h1>
+            <h1 className="font-sans font-bold text-2xl">Bem-vindo</h1>
           )}
         </div>
         {user ? (
@@ -203,7 +203,7 @@ function Dashboard() {
               <p className="mt-4 text-sm text-primary-foreground/60">Carregando…</p>
             ) : !user ? (
               <>
-                <h2 className="mt-4 font-serif text-2xl leading-tight">
+                <h2 className="mt-4 font-sans font-bold text-2xl leading-tight">
                   Gestão completa do seu ministério
                 </h2>
                 <p className="mt-1 text-sm text-primary-foreground/60">
@@ -218,7 +218,7 @@ function Dashboard() {
               </>
             ) : proximo ? (
               <>
-                <h2 className="mt-4 font-serif text-2xl leading-tight">{proximo.nome}</h2>
+                <h2 className="mt-4 font-sans font-bold text-2xl leading-tight">{proximo.nome}</h2>
                 <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-primary-foreground/60">
                   <span className="inline-flex items-center gap-1 capitalize">
                     <Clock className="size-3.5" /> {formatCultoData(proximo.data)} •{" "}
@@ -237,7 +237,7 @@ function Dashboard() {
                     <p className="text-[10px] uppercase tracking-widest text-primary-foreground/50">
                       Equipe
                     </p>
-                    <p className="mt-1 font-serif text-xl font-bold">
+                    <p className="mt-1 font-sans font-bold text-xl font-bold">
                       {proximo.integrantes_culto.length}
                     </p>
                     <p className="text-[10px] text-primary-foreground/50">Escalados</p>
@@ -246,7 +246,7 @@ function Dashboard() {
                     <p className="text-[10px] uppercase tracking-widest text-primary-foreground/50">
                       Músicas
                     </p>
-                    <p className="mt-1 font-serif text-xl font-bold">{repertorio.length}</p>
+                    <p className="mt-1 font-sans font-bold text-xl font-bold">{repertorio.length}</p>
                     <p className="text-[10px] text-primary-foreground/50">No repertório</p>
                   </div>
                   <div>
@@ -277,7 +277,7 @@ function Dashboard() {
               </>
             ) : (
               <>
-                <h2 className="mt-4 font-serif text-2xl leading-tight">Nenhum culto agendado</h2>
+                <h2 className="mt-4 font-sans font-bold text-2xl leading-tight">Nenhum culto agendado</h2>
                 <p className="mt-1 text-sm text-primary-foreground/60">
                   Crie o próximo culto para montar a escala e o repertório.
                 </p>
@@ -307,7 +307,7 @@ function Dashboard() {
               <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
                 <Users className="size-4" />
               </span>
-              <p className="font-serif text-xl font-bold text-foreground">
+              <p className="font-sans font-bold text-xl font-bold text-foreground">
                 {proximo?.integrantes_culto.length ?? 0}
               </p>
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
@@ -322,7 +322,7 @@ function Dashboard() {
               <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
                 <Music2 className="size-4" />
               </span>
-              <p className="font-serif text-xl font-bold text-foreground">{repertorio.length}</p>
+              <p className="font-sans font-bold text-xl font-bold text-foreground">{repertorio.length}</p>
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                 Músicas
               </p>
@@ -337,7 +337,7 @@ function Dashboard() {
               <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
                 <MessageCircle className="size-4" />
               </span>
-              <p className="font-serif text-xl font-bold text-foreground">{avisos.length}</p>
+              <p className="font-sans font-bold text-xl font-bold text-foreground">{avisos.length}</p>
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                 Avisos
               </p>
@@ -350,7 +350,7 @@ function Dashboard() {
               <span className="grid size-9 place-items-center rounded-xl bg-primary/5 text-primary">
                 <Calendar className="size-4" />
               </span>
-              <p className="font-serif text-xl font-bold text-foreground">{semana.length}</p>
+              <p className="font-sans font-bold text-xl font-bold text-foreground">{semana.length}</p>
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                 Próximos
               </p>
@@ -470,7 +470,7 @@ function Dashboard() {
                           destaque ? "bg-accent text-accent-foreground" : "bg-primary/5 text-foreground"
                         }`}
                       >
-                        <p className="font-serif text-base font-bold leading-none">
+                        <p className="font-sans font-bold text-base font-bold leading-none">
                           {String(d.getDate()).padStart(2, "0")}
                         </p>
                         <p className="mt-0.5 text-[9px] uppercase tracking-wider opacity-80">

@@ -273,7 +273,7 @@ function PerfilPage() {
         <section className="rounded-3xl border border-border bg-surface p-5">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="grid size-16 place-items-center overflow-hidden rounded-full bg-primary font-serif text-2xl italic text-primary-foreground">
+              <div className="grid size-16 place-items-center overflow-hidden rounded-full bg-primary font-sans font-bold text-2xl text-primary-foreground">
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="Foto de perfil" className="size-full object-cover" />
                 ) : (
@@ -303,7 +303,7 @@ function PerfilPage() {
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Classificação vocal
               </p>
-              <p className="font-serif text-lg italic">
+              <p className="font-sans font-bold text-lg">
                 {profile?.funcao_vocal || "Não definida"}
               </p>
               <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
@@ -709,7 +709,7 @@ function Sheet({
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border" />
         <div className="flex items-center justify-between px-5 pb-3">
-          <h3 className="font-serif text-lg italic">{title}</h3>
+          <h3 className="font-sans font-bold text-lg">{title}</h3>
           <button onClick={onClose} className="grid size-8 place-items-center rounded-full bg-secondary">
             <X className="size-4" />
           </button>

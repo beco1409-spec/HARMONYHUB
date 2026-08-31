@@ -328,7 +328,7 @@ function IntegranteSection({
           <span className="grid size-7 place-items-center rounded-lg bg-primary/5 text-primary">
             {icon}
           </span>
-          <h3 className="font-serif text-base italic">{titulo}</h3>
+          <h3 className="font-sans font-bold text-base">{titulo}</h3>
           <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
             {integrantes.length}
           </span>

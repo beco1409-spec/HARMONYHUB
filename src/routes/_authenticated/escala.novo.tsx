@@ -48,7 +48,7 @@ function NovoCultoPage() {
           <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
             Nova escala
           </p>
-          <h1 className="font-serif text-2xl italic">Novo culto</h1>
+          <h1 className="font-sans font-bold text-2xl">Novo culto</h1>
         </div>
       </header>
 

@@ -174,7 +174,7 @@ function ModoCultoPage() {
       <AppShell>
         <div className="flex min-h-[70vh] flex-col items-center justify-center px-8 text-center">
           <Music2 className="size-10 text-accent" />
-          <h1 className="mt-4 font-serif text-2xl italic">Culto encerrado</h1>
+          <h1 className="mt-4 font-sans font-bold text-2xl">Culto encerrado</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             A sessão ao vivo foi finalizada e registrada no histórico.
           </p>
@@ -197,7 +197,7 @@ function ModoCultoPage() {
           <div className="grid size-20 place-items-center rounded-full bg-accent/10 text-accent">
             <Radio className="size-8" />
           </div>
-          <h1 className="mt-5 font-serif text-2xl italic">Modo Culto</h1>
+          <h1 className="mt-5 font-sans font-bold text-2xl">Modo Culto</h1>
           {proximo ? (
             <>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -285,7 +285,7 @@ function ModoCultoPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-foreground/50">
             Música {idx + 1} de {repertorio.length}
           </p>
-          <h1 className="mt-2 font-serif text-3xl italic leading-tight">
+          <h1 className="mt-2 font-sans font-bold text-3xl leading-tight">
             {musica?.nome ?? "Repertório vazio"}
           </h1>
           <p className="mt-1 text-sm text-primary-foreground/60">{musica?.autor ?? ""}</p>
@@ -368,7 +368,7 @@ function ModoCultoPage() {
       {/* Cifra */}
       <section className="rounded-t-3xl bg-background px-5 pt-6 pb-8 -mt-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-serif text-lg italic">Cifra & Letra</h2>
+          <h2 className="font-sans font-bold text-lg">Cifra & Letra</h2>
           <div className="flex gap-1">
             <button
               onClick={() => setOffset((o) => o - 1)}
@@ -397,7 +397,7 @@ function ModoCultoPage() {
           </p>
           {proxima ? (
             <button onClick={() => irPara.mutate(idx + 1)} className="mt-1 text-left">
-              <p className="font-serif text-lg italic">
+              <p className="font-sans font-bold text-lg">
                 {proxima.musica?.nome ?? "—"}
                 <span className="ml-2 font-mono text-sm text-accent">
                   {proxima.tom_override ?? proxima.musica?.tom_original ?? ""}

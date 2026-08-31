@@ -57,7 +57,7 @@ function EscalaLista() {
         {!isLoading && cultos.length === 0 && (
           <div className="rounded-3xl border-2 border-dashed border-border bg-surface p-8 text-center">
             <Calendar className="mx-auto size-8 text-muted-foreground" />
-            <p className="mt-3 font-serif text-lg italic">Nenhum culto cadastrado</p>
+            <p className="mt-3 font-sans font-bold text-lg">Nenhum culto cadastrado</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Comece criando o próximo culto do ministério.
             </p>
@@ -81,7 +81,7 @@ function EscalaLista() {
               <Calendar className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="font-serif text-lg leading-tight">{c.nome}</p>
+              <p className="font-sans font-bold text-lg leading-tight">{c.nome}</p>
               <p className="mt-0.5 truncate text-xs text-muted-foreground">
                 {formatCultoData(c.data)}
               </p>

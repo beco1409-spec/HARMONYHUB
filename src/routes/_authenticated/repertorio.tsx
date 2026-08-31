@@ -218,7 +218,7 @@ function RepertorioPage() {
                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                   Duração estimada
                 </p>
-                <p className="font-serif text-xl">
+                <p className="font-sans font-bold text-xl">
                   {repertorio.length} músicas • {duracaoTotal}
                 </p>
               </div>
@@ -240,7 +240,7 @@ function RepertorioPage() {
         {tab === "culto" && !loadingCulto && !proximo && (
           <div className="rounded-3xl border-2 border-dashed border-border bg-surface p-8 text-center">
             <Music2 className="mx-auto size-8 text-muted-foreground" />
-            <p className="mt-3 font-serif text-lg italic">Nenhum culto agendado</p>
+            <p className="mt-3 font-sans font-bold text-lg">Nenhum culto agendado</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Crie um culto na aba Escala para montar o repertório.
             </p>
@@ -257,7 +257,7 @@ function RepertorioPage() {
                   key={r.id}
                   className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3"
                 >
-                  <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/5 font-serif text-sm font-bold text-primary">
+                  <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/5 font-sans font-bold text-sm font-bold text-primary">
                     {idx + 1}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -350,7 +350,7 @@ function RepertorioPage() {
             {!loadingMusicas && biblioteca.length === 0 && (
               <li className="rounded-3xl border-2 border-dashed border-border bg-surface p-8 text-center">
                 <Music2 className="mx-auto size-8 text-muted-foreground" />
-                <p className="mt-3 font-serif text-lg italic">Biblioteca vazia</p>
+                <p className="mt-3 font-sans font-bold text-lg">Biblioteca vazia</p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Cadastre a primeira música do ministério.
                 </p>

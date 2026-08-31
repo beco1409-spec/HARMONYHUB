@@ -29,7 +29,7 @@ export function AppHeader({
             {eyebrow}
           </p>
         )}
-        <h1 className="mt-1 font-serif text-3xl italic leading-tight text-foreground">
+        <h1 className="mt-1 font-sans font-bold text-3xl leading-tight text-foreground">
           {title}
         </h1>
         {subtitle && (

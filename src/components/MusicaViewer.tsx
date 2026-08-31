@@ -43,7 +43,7 @@ export function MusicaViewer({
         >
           <ArrowLeft className="size-5" />
         </button>
-        <h1 className="font-serif text-lg italic">Cifras</h1>
+        <h1 className="font-sans font-bold text-lg">Cifras</h1>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setTamanho((t) => (t + 1) % TAMANHOS.length)}
@@ -67,7 +67,7 @@ export function MusicaViewer({
       </header>
 
       <div className="flex-1 overflow-y-auto px-5 pb-24 pt-5">
-        <h2 className="font-serif text-2xl italic">{musica.nome}</h2>
+        <h2 className="font-sans font-bold text-2xl">{musica.nome}</h2>
         <p className="mt-1 text-sm text-muted-foreground">Tom {tomBase}</p>
         {musica.autor && (
           <p className="text-sm text-muted-foreground">{musica.autor}</p>

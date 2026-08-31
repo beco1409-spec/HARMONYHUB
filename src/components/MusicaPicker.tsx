@@ -37,7 +37,7 @@ export function MusicaPicker({
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border" />
         <div className="flex items-center justify-between px-5 pb-3">
-          <h3 className="font-serif text-lg italic">Adicionar música ao culto</h3>
+          <h3 className="font-sans font-bold text-lg">Adicionar música ao culto</h3>
           <button
             onClick={onClose}
             className="grid size-8 place-items-center rounded-full bg-secondary"

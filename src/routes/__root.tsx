@@ -18,7 +18,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-serif text-7xl italic text-foreground">404</h1>
+        <h1 className="font-sans font-bold text-7xl text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Página não encontrada</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Essa página não existe ou foi movida.
@@ -46,7 +46,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-serif text-xl italic text-foreground">
+        <h1 className="font-sans font-bold text-xl text-foreground">
           Algo deu errado
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">

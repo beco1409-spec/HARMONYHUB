@@ -107,7 +107,7 @@ function UsuariosPage() {
         {perfis.map((p) => (
           <div key={p.id} className="rounded-3xl border border-border bg-surface p-4">
             <div className="flex items-start gap-3">
-              <div className="grid size-11 shrink-0 place-items-center rounded-full bg-primary font-serif text-sm italic text-primary-foreground">
+              <div className="grid size-11 shrink-0 place-items-center rounded-full bg-primary font-sans font-bold text-sm text-primary-foreground">
                 {iniciaisDe(p.nome_completo)}
               </div>
               <div className="min-w-0 flex-1">
@@ -237,7 +237,7 @@ function EditarUsuarioModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <h2 className="font-serif text-xl italic">Editar usuário</h2>
+          <h2 className="font-sans font-bold text-xl">Editar usuário</h2>
           <button onClick={onClose} className="grid size-8 place-items-center rounded-full bg-secondary">
             <X className="size-4" />
           </button>
@@ -370,7 +370,7 @@ function ConfirmDialog({
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 px-6 backdrop-blur-sm">
       <div className="w-full max-w-sm rounded-3xl bg-background p-6 shadow-elegant">
-        <h3 className="font-serif text-lg italic">{titulo}</h3>
+        <h3 className="font-sans font-bold text-lg">{titulo}</h3>
         <p className="mt-2 text-sm text-muted-foreground">{mensagem}</p>
         <div className="mt-5 flex gap-2">
           <button
