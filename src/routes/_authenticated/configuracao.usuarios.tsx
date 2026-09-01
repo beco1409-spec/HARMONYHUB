@@ -11,6 +11,7 @@ import {
   TIMBRE_NAO_SE_APLICA,
   exigeTimbreVocal,
   getProfile,
+  iconeFuncao,
   iniciaisDe,
   listProfiles,
   setProfileRole,
@@ -124,7 +125,7 @@ function UsuariosPage() {
                       key={f}
                       className="rounded-full bg-primary/5 px-2 py-0.5 text-[10px] font-medium text-primary"
                     >
-                      {f}
+                      <span aria-hidden="true">{iconeFuncao(f)}</span> {f}
                     </span>
                   ))}
                   {p.funcao_vocal && p.funcao_vocal !== TIMBRE_NAO_SE_APLICA && (
@@ -261,19 +262,19 @@ function EditarUsuarioModal({
             </span>
             <div className="grid grid-cols-2 gap-2">
               {FUNCOES_MUSICAIS.map((f) => {
-                const checked = funcoes.includes(f);
+                const checked = funcoes.includes(f.nome);
                 return (
                   <button
-                    key={f}
+                    key={f.nome}
                     type="button"
-                    onClick={() => toggleFuncao(f)}
+                    onClick={() => toggleFuncao(f.nome)}
                     className={`rounded-xl border px-3 py-2 text-left text-xs font-medium ${
                       checked
                         ? "border-accent bg-accent/10 text-accent"
                         : "border-border bg-surface text-foreground"
                     }`}
                   >
-                    {f}
+                    <span aria-hidden="true">{f.icone}</span> {f.nome}
                   </button>
                 );
               })}

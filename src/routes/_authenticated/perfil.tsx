@@ -30,6 +30,7 @@ import {
   getMeuCantor,
   getMeuInstrumentista,
   getProfile,
+  iconeFuncao,
   iniciaisDe,
   listCantores,
   listFavoritos,
@@ -397,7 +398,7 @@ function PerfilPage() {
                   key={f}
                   className="rounded-full bg-primary/5 px-2.5 py-1 text-[10px] font-medium text-primary"
                 >
-                  {f}
+                  <span aria-hidden="true">{iconeFuncao(f)}</span> {f}
                 </span>
               ))}
               <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">

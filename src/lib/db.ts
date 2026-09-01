@@ -419,14 +419,19 @@ export type PermissionRole = "master" | "padrao";
 
 /** Funções musicais que um integrante pode acumular (seleção múltipla). */
 export const FUNCOES_MUSICAIS = [
-  "Vocalista",
-  "Baixista",
-  "Guitarrista",
-  "Tecladista",
-  "Baterista",
-  "Violinista",
-  "Backing Vocal",
+  { nome: "Vocal", icone: "🎤" },
+  { nome: "Guitarra", icone: "🎸" },
+  { nome: "Contrabaixo", icone: "🎻" },
+  { nome: "Bateria", icone: "🥁" },
+  { nome: "Teclado/Piano", icone: "🎹" },
+  { nome: "Violão", icone: "🪕" },
+  { nome: "Som/Técnico", icone: "🎚️" },
 ] as const;
+
+/** Nome da função -> emoji, para exibir junto às tags salvas nos perfis. */
+export function iconeFuncao(nome: string): string {
+  return FUNCOES_MUSICAIS.find((f) => f.nome === nome)?.icone ?? "🎵";
+}
 
 /** Classificação de timbre de voz (seleção única, obrigatória só para quem canta). */
 export const TIMBRES_VOCAIS = [
@@ -442,7 +447,7 @@ export const TIMBRE_NAO_SE_APLICA = "Não se aplica";
 
 /** Funções que exigem classificação de timbre vocal. */
 export function exigeTimbreVocal(funcoes: string[]) {
-  return funcoes.includes("Vocalista") || funcoes.includes("Backing Vocal");
+  return funcoes.includes("Vocal");
 }
 
 export async function getProfile(userId: string): Promise<Profile | null> {

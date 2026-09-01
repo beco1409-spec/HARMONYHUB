@@ -83,12 +83,12 @@ export function ProfileSetupModal({
             </span>
             <div className="grid grid-cols-2 gap-2">
               {FUNCOES_MUSICAIS.map((f) => {
-                const checked = funcoes.includes(f);
+                const checked = funcoes.includes(f.nome);
                 return (
                   <button
-                    key={f}
+                    key={f.nome}
                     type="button"
-                    onClick={() => toggleFuncao(f)}
+                    onClick={() => toggleFuncao(f.nome)}
                     className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-xs font-medium transition-colors ${
                       checked
                         ? "border-accent bg-accent/10 text-accent"
@@ -102,7 +102,7 @@ export function ProfileSetupModal({
                     >
                       {checked && <Check className="size-3" strokeWidth={3} />}
                     </span>
-                    {f}
+                    <span aria-hidden="true">{f.icone}</span> {f.nome}
                   </button>
                 );
               })}
