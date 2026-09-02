@@ -391,21 +391,19 @@ function PerfilPage() {
             </div>
           )}
 
-          {(profile?.funcoes?.length ?? 0) > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {profile!.funcoes.map((f) => (
-                <span
-                  key={f}
-                  className="rounded-full bg-primary/5 px-2.5 py-1 text-[10px] font-medium text-primary"
-                >
-                  <span aria-hidden="true">{iconeFuncao(f)}</span> {f}
-                </span>
-              ))}
-              <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                {profile?.role === "master" ? "Master" : "Padrão"}
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            {profile?.funcoes?.map((f) => (
+              <span
+                key={f}
+                className="rounded-full bg-primary/5 px-2.5 py-1 text-[10px] font-medium text-primary"
+              >
+                <span aria-hidden="true">{iconeFuncao(f)}</span> {f}
               </span>
-            </div>
-          )}
+            ))}
+            <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {profile?.role === "master" ? "Master" : "Padrão"}
+            </span>
+          </div>
         </section>
 
         {/* Meus tons preferidos */}
