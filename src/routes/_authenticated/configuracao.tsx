@@ -10,9 +10,9 @@ export const Route = createFileRoute("/_authenticated/configuracao")({
   // Master a navegação é redirecionada. A escrita em si continua protegida
   // pelas policies de RLS no Supabase, independente do frontend.
   beforeLoad: async () => {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) throw redirect({ to: "/auth" });
-    const profile = await getProfile(data.user.id);
+    const { data } = await supabase.auth.getSession();
+    if (!data.session?.user) throw redirect({ to: "/auth" });
+    const profile = await getProfile(data.session.user.id);
     if (profile?.role !== "master") throw redirect({ to: "/perfil" });
   },
   head: () => ({

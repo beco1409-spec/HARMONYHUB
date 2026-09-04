@@ -23,9 +23,9 @@ import {
 export const Route = createFileRoute("/_authenticated/configuracao/usuarios")({
   ssr: false,
   beforeLoad: async () => {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) throw redirect({ to: "/auth" });
-    const profile = await getProfile(data.user.id);
+    const { data } = await supabase.auth.getSession();
+    if (!data.session?.user) throw redirect({ to: "/auth" });
+    const profile = await getProfile(data.session.user.id);
     if (profile?.role !== "master") throw redirect({ to: "/perfil" });
   },
   head: () => ({
