@@ -138,8 +138,24 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+    // Guarda apenas o ID do usuário já tratado da última vez. Só invalida
+    // o roteador quando esse ID muda de verdade (login novo, logout, troca
+    // de conta) — evita loop caso o Supabase emita vários eventos
+    // diferentes (SIGNED_IN, USER_UPDATED etc.) seguidos para o mesmo
+    // usuário, por exemplo durante tentativas de renovação de sessão.
+    let ultimoUserId: string | null | undefined = undefined;
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      const userId = session?.user?.id ?? null;
+      if (event === "USER_UPDATED") {
+        // Atualização de dados do próprio usuário: sempre vale a pena
+        // atualizar os dados em cache, mas não precisa invalidar o
+        // roteador (a navegação não muda).
+        queryClient.invalidateQueries();
+        return;
+      }
+      if (userId === ultimoUserId) return;
+      ultimoUserId = userId;
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
     });
