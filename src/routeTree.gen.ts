@@ -18,6 +18,7 @@ import { Route as AuthenticatedCultoRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedEscalaRouteImport } from './routes/_authenticated/escala'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedRepertorioRouteImport } from './routes/_authenticated/repertorio'
+import { Route as AuthenticatedConfiguracaoIndexRouteImport } from './routes/_authenticated/configuracao.index'
 import { Route as AuthenticatedConfiguracaoUsuariosRouteImport } from './routes/_authenticated/configuracao.usuarios'
 import { Route as AuthenticatedEscalaCultoIdRouteImport } from './routes/_authenticated/escala.$cultoId'
 import { Route as AuthenticatedEscalaNovoRouteImport } from './routes/_authenticated/escala.novo'
@@ -67,6 +68,12 @@ const AuthenticatedRepertorioRoute = AuthenticatedRepertorioRouteImport.update({
   path: '/repertorio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedConfiguracaoIndexRoute =
+  AuthenticatedConfiguracaoIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedConfiguracaoRoute,
+  } as any)
 const AuthenticatedConfiguracaoUsuariosRoute =
   AuthenticatedConfiguracaoUsuariosRouteImport.update({
     id: '/usuarios',
@@ -97,12 +104,12 @@ export interface FileRoutesByFullPath {
   '/configuracao/usuarios': typeof AuthenticatedConfiguracaoUsuariosRoute
   '/escala/$cultoId': typeof AuthenticatedEscalaCultoIdRoute
   '/escala/novo': typeof AuthenticatedEscalaNovoRoute
+  '/configuracao/': typeof AuthenticatedConfiguracaoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/configuracao': typeof AuthenticatedConfiguracaoRouteWithChildren
   '/culto': typeof AuthenticatedCultoRoute
   '/escala': typeof AuthenticatedEscalaRouteWithChildren
   '/perfil': typeof AuthenticatedPerfilRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/configuracao/usuarios': typeof AuthenticatedConfiguracaoUsuariosRoute
   '/escala/$cultoId': typeof AuthenticatedEscalaCultoIdRoute
   '/escala/novo': typeof AuthenticatedEscalaNovoRoute
+  '/configuracao': typeof AuthenticatedConfiguracaoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/_authenticated/configuracao/usuarios': typeof AuthenticatedConfiguracaoUsuariosRoute
   '/_authenticated/escala/$cultoId': typeof AuthenticatedEscalaCultoIdRoute
   '/_authenticated/escala/novo': typeof AuthenticatedEscalaNovoRoute
+  '/_authenticated/configuracao/': typeof AuthenticatedConfiguracaoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,12 +149,12 @@ export interface FileRouteTypes {
     | '/configuracao/usuarios'
     | '/escala/$cultoId'
     | '/escala/novo'
+    | '/configuracao/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/reset-password'
-    | '/configuracao'
     | '/culto'
     | '/escala'
     | '/perfil'
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/configuracao/usuarios'
     | '/escala/$cultoId'
     | '/escala/novo'
+    | '/configuracao'
   id:
     | '__root__'
     | '/'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/_authenticated/configuracao/usuarios'
     | '/_authenticated/escala/$cultoId'
     | '/_authenticated/escala/novo'
+    | '/_authenticated/configuracao/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -241,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRepertorioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/configuracao/': {
+      id: '/_authenticated/configuracao/'
+      path: '/'
+      fullPath: '/configuracao/'
+      preLoaderRoute: typeof AuthenticatedConfiguracaoIndexRouteImport
+      parentRoute: typeof AuthenticatedConfiguracaoRoute
+    }
     '/_authenticated/configuracao/usuarios': {
       id: '/_authenticated/configuracao/usuarios'
       path: '/usuarios'
@@ -267,12 +285,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedConfiguracaoRouteChildren {
   AuthenticatedConfiguracaoUsuariosRoute: typeof AuthenticatedConfiguracaoUsuariosRoute
+  AuthenticatedConfiguracaoIndexRoute: typeof AuthenticatedConfiguracaoIndexRoute
 }
 
 const AuthenticatedConfiguracaoRouteChildren: AuthenticatedConfiguracaoRouteChildren =
   {
     AuthenticatedConfiguracaoUsuariosRoute:
       AuthenticatedConfiguracaoUsuariosRoute,
+    AuthenticatedConfiguracaoIndexRoute: AuthenticatedConfiguracaoIndexRoute,
   }
 
 const AuthenticatedConfiguracaoRouteWithChildren =
