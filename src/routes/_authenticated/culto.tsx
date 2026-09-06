@@ -238,27 +238,30 @@ function ModoCultoPage() {
 
   return (
     <AppShell>
-      <div className="bg-primary text-primary-foreground">
+      <div className="bg-gradient-to-b from-primary to-primary/95 text-primary-foreground">
         {/* Header live */}
         <header className="flex items-center justify-between px-5 pt-8 pb-4">
           <button
             onClick={() => navigate({ to: "/" })}
-            className="grid size-9 place-items-center rounded-full bg-primary-foreground/10"
+            className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 transition-colors duration-200 hover:bg-primary-foreground/20"
           >
             <ChevronDown className="size-4" />
           </button>
-          <div className="flex items-center gap-2 rounded-full bg-accent/20 px-3 py-1.5">
+          <div className="flex items-center gap-2 rounded-full bg-accent/20 px-3 py-1.5 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
             <span className="relative flex size-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-accent" />
+              <span
+                className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75"
+                style={{ animationDuration: `${60000 / bpm}ms` }}
+              />
+              <span className="relative inline-flex size-2 rounded-full bg-accent drop-shadow-sm" />
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-accent">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-accent drop-shadow-sm">
               Modo Culto Ao Vivo
             </span>
           </div>
           <button
             onClick={() => setShowPresenca((s) => !s)}
-            className="relative grid size-9 place-items-center rounded-full bg-primary-foreground/10"
+            className="relative grid size-9 place-items-center rounded-full bg-primary-foreground/10 transition-colors duration-200 hover:bg-primary-foreground/20"
           >
             <Users className="size-4" />
             {presentes.length > 0 && (
@@ -314,13 +317,13 @@ function ModoCultoPage() {
           <button
             onClick={() => irPara.mutate(Math.max(0, idx - 1))}
             disabled={idx === 0}
-            className="text-primary-foreground/80 disabled:opacity-30"
+            className="text-primary-foreground/80 transition-colors duration-200 hover:text-primary-foreground disabled:opacity-30"
           >
             <SkipBack className="size-6" fill="currentColor" />
           </button>
           <button
             onClick={() => togglePlay.mutate()}
-            className="grid size-16 place-items-center rounded-full bg-accent text-accent-foreground shadow-glow"
+            className="grid size-16 place-items-center rounded-full bg-accent text-accent-foreground shadow-glow transition-transform duration-200 ease-out hover:scale-105 active:scale-95"
           >
             {playing ? (
               <Pause className="size-7" fill="currentColor" />
@@ -331,7 +334,7 @@ function ModoCultoPage() {
           <button
             onClick={() => irPara.mutate(Math.min(repertorio.length - 1, idx + 1))}
             disabled={idx >= repertorio.length - 1}
-            className="text-primary-foreground/80 disabled:opacity-30"
+            className="text-primary-foreground/80 transition-colors duration-200 hover:text-primary-foreground disabled:opacity-30"
           >
             <SkipForward className="size-6" fill="currentColor" />
           </button>
